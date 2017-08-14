@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="unspecified"><source path="G:\UsbSerialExamples\usbSerialExamples\build\intermediates\exploded-aar\UsbSerialExamples\usbSerialLibrary\unspecified\assets"/></dataSet><dataSet config="main"><source path="G:\UsbSerialExamples\usbSerialExamples\src\main\assets"/><source path="G:\UsbSerialExamples\usbSerialExamples\build\generated\assets\shaders\debug"/></dataSet><dataSet config="debug"><source path="G:\UsbSerialExamples\usbSerialExamples\src\debug\assets"/></dataSet></merger>

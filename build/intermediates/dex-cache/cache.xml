@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="G:\UsbSerialExamples\usbSerialExamples\build\intermediates\exploded-aar\UsbSerialExamples\usbSerialLibrary\unspecified\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="3d4cad80ed28dc4aba7f933b071d7f4843b397aa">
+        <dex dex="G:\UsbSerialExamples\usbSerialExamples\build\intermediates\pre-dexed\debug\UsbSerialExamples-usbSerialLibrary-unspecified_ed92eb4d0c89431f0e30809d7f3c996257172af9.jar" />
+    </item>
+
+</items>

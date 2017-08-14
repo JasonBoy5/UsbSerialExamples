@@ -1,0 +1,24 @@
+#Internal package file, do not edit.
+#Mon Aug 14 18:23:56 CST 2017
+2.base=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\resources-debug.ap_
+5.file=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\resources-debug.ap_\\resources.arsc
+5.set=ANDROID_RESOURCE
+3.base=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\resources-debug.ap_
+6.file=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\resources-debug.ap_\\res\\layout\\serial_console.xml
+2.set=ANDROID_RESOURCE
+4.base=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\1f\\main
+count=7
+0.file=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\resources-debug.ap_\\res\\drawable-hdpi-v4\\ic_launcher.png
+5.base=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\resources-debug.ap_
+4.set=DEX
+6.base=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\resources-debug.ap_
+1.file=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\resources-debug.ap_\\res\\xml\\device_filter.xml
+1.set=ANDROID_RESOURCE
+2.file=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\resources-debug.ap_\\AndroidManifest.xml
+6.set=ANDROID_RESOURCE
+0.base=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\resources-debug.ap_
+3.file=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\resources-debug.ap_\\res\\layout\\main.xml
+3.set=ANDROID_RESOURCE
+1.base=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\resources-debug.ap_
+4.file=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\1f\\main\\classes.dex
+0.set=ANDROID_RESOURCE
