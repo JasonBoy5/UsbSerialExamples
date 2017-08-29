@@ -18,19 +18,171 @@
         android:layout_below="@+id/demoTitle"
         android:layout_height="1dip"
         android:background="#eeeeee" />
-    
+
     <ScrollView
         android:id="@+id/demoScroller"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/separator" >
+        android:layout_height="355dp"
+        android:layout_below="@+id/separator">
 
         <TextView
             android:id="@+id/consoleText"
-            android:textIsSelectable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textIsSelectable="true"
             android:typeface="monospace" />
     </ScrollView>
+
+    <Button
+        android:id="@+id/btn33"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/btn3"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="5dp"
+        android:text="连接" />
+
+    <Button
+        android:id="@+id/btn7"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignBottom="@+id/btn33"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/btn33"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/btn8"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignBottom="@+id/btn7"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/btn7"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/btn9"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignBottom="@+id/btn8"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/btn8"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/btn44"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/btn33"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="5dp"
+        android:text="连接" />
+
+    <Button
+        android:id="@+id/btn10"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignBottom="@+id/btn44"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/btn44"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/btn11"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignBottom="@+id/btn10"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/btn10"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/btn12"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignBottom="@+id/btn11"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/btn11"
+        android:text="Button" />
+
+
+
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/demoScroller"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="5dp"
+        android:text="连接" />
+
+    <Button
+        android:id="@+id/btn_try"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignBottom="@+id/btn_send"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/btn_send"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/btn1"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignBottom="@+id/btn_try"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/btn_try"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignBottom="@+id/btn1"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/btn1"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/btn3"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/btn_send"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="5dp"
+        android:text="连接" />
+
+    <Button
+        android:id="@+id/btn4"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignBottom="@+id/btn3"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/btn3"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/btn5"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignBottom="@+id/btn4"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/btn4"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/btn6"
+        android:layout_width="88dp"
+        android:layout_height="45dp"
+        android:layout_alignBottom="@+id/btn5"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/btn5"
+        android:text="Button" />
+
+
 
 </RelativeLayout>

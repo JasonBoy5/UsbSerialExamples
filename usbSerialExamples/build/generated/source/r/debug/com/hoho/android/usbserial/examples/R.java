@@ -14,6 +14,22 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
+        public static final int btn1=0x7f060012;
+        public static final int btn10=0x7f06000d;
+        public static final int btn11=0x7f06000e;
+        public static final int btn12=0x7f06000f;
+        public static final int btn2=0x7f060013;
+        public static final int btn3=0x7f060008;
+        public static final int btn33=0x7f060007;
+        public static final int btn4=0x7f060014;
+        public static final int btn44=0x7f06000c;
+        public static final int btn5=0x7f060015;
+        public static final int btn6=0x7f060016;
+        public static final int btn7=0x7f060009;
+        public static final int btn8=0x7f06000a;
+        public static final int btn9=0x7f06000b;
+        public static final int btn_send=0x7f060010;
+        public static final int btn_try=0x7f060011;
         public static final int consoleText=0x7f060006;
         public static final int demoScroller=0x7f060005;
         public static final int demoTitle=0x7f060000;

@@ -35,18 +35,18 @@ public class HexDump {
         byte[] line = new byte[16];
         int lineIndex = 0;
 
-        result.append("\n0x");
-        result.append(toHexString(offset));
+//        result.append("\n0x");
+//        result.append(toHexString(offset));
 
         for (int i = offset; i < offset + length; i++) {
             if (lineIndex == 16) {
-                result.append(" ");
+//                result.append(" ");
 
                 for (int j = 0; j < 16; j++) {
                     if (line[j] > ' ' && line[j] < '~') {
                         result.append(new String(line, j, 1));
                     } else {
-                        result.append(".");
+//                        result.append(".");
                     }
                 }
 

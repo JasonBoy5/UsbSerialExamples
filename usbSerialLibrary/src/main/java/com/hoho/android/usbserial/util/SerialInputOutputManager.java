@@ -34,7 +34,7 @@ import java.nio.ByteBuffer;
  *
  * @author mike wakerly (opensource@hoho.com)
  */
-public class SerialInputOutputManager implements Runnable {
+public class  SerialInputOutputManager implements Runnable {
 
     private static final String TAG = SerialInputOutputManager.class.getSimpleName();
     private static final boolean DEBUG = true;
@@ -60,11 +60,11 @@ public class SerialInputOutputManager implements Runnable {
 
     // Synchronized by 'this'
     private Listener mListener;
-
     public interface Listener {
         /**
          * Called when new incoming data is available.
          */
+//        public void onNewData(byte[] data);
         public void onNewData(byte[] data);
 
         /**
@@ -153,16 +153,33 @@ public class SerialInputOutputManager implements Runnable {
         }
     }
 
+//////////////
+    public byte[] getData() throws IOException {
+        int len = mDriver.read(mReadBuffer.array(), READ_WAIT_MILLIS);
+        final byte[] data = new byte[len];
+        mReadBuffer.get(data, 0, len);
+        return data;
+    }
+
+    public void clearBuf() throws IOException {
+        int len = mDriver.read(mReadBuffer.array(), READ_WAIT_MILLIS);
+        if (len > 0) {
+            mReadBuffer.clear();
+        }
+    }
+    ////////////
+
     private void step() throws IOException {
         // Handle incoming data.
         int len = mDriver.read(mReadBuffer.array(), READ_WAIT_MILLIS);
         if (len > 0) {
-            if (DEBUG) Log.d(TAG, "Read data len=" + len);
+            if (DEBUG) Log.d(TAG, "Read data len=" + len );
             final Listener listener = getListener();
             if (listener != null) {
                 final byte[] data = new byte[len];
                 mReadBuffer.get(data, 0, len);
-                listener.onNewData(data);
+                byte test[] = data;
+                listener.onNewData(test);
             }
             mReadBuffer.clear();
         }

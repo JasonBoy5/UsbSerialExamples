@@ -1,4 +1,7 @@
-#Mon Aug 14 18:23:56 CST 2017
-base.0=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\1f\\main
-renamed.0=classes.dex
-file.0=G\:\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\1f\\main\\classes.dex
+#Tue Aug 29 14:53:50 CST 2017
+base.0=G\:\\Android\\AndroidStudioProject\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_4bdcbf2e11f0e86b9116d8f288b8c779d7c4d1f2
+renamed.1=classes.dex
+renamed.0=classes2.dex
+file.1=G\:\\Android\\AndroidStudioProject\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_797383f9748277f7d49d33b5443d20484c54e2d5\\classes.dex
+base.1=G\:\\Android\\AndroidStudioProject\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_797383f9748277f7d49d33b5443d20484c54e2d5
+file.0=G\:\\Android\\AndroidStudioProject\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_4bdcbf2e11f0e86b9116d8f288b8c779d7c4d1f2\\classes.dex

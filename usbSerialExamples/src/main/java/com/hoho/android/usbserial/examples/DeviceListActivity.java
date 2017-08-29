@@ -57,9 +57,9 @@ public class DeviceListActivity extends Activity {
     private final String TAG = DeviceListActivity.class.getSimpleName();
 
     private UsbManager mUsbManager;
-    private ListView mListView;
-    private TextView mProgressBarTitle;
-    private ProgressBar mProgressBar;
+    private ListView mListView;//列表视图
+    private TextView mProgressBarTitle;//进度条标题
+    private ProgressBar mProgressBar;//进度条
 
     private static final int MESSAGE_REFRESH = 101;
     private static final long REFRESH_TIMEOUT_MILLIS = 5000;
@@ -216,6 +216,7 @@ public class DeviceListActivity extends Activity {
 
     private void showConsoleActivity(UsbSerialDriver driver) {
         SerialConsoleActivity.show(this, driver);
+
     }
 
 }

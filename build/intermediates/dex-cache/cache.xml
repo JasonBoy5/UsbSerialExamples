@@ -2,6 +2,42 @@
 <items version="2" >
 
     <item
+        is-multidex="true"
+        jar="C:\Users\Administrator\.android\build-cache\b1e8f79ee0d0845707799e88bafc27f5203c7d75\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="5a2386ad9bfff580b206a7fe305cdccd00798159">
+        <dex dex="G:\Android\AndroidStudioProject\UsbSerialExamples\usbSerialExamples\build\intermediates\transforms\dex\debug\folders\1000\10\classes_2c81f83b648a372f97f10bbdb2fcc36da7822811\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="G:\Android\AndroidStudioProject\UsbSerialExamples\usbSerialExamples\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="da1767df741f9c1b799a0974e8046cadd7669243">
+        <dex dex="G:\Android\AndroidStudioProject\UsbSerialExamples\usbSerialExamples\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_797383f9748277f7d49d33b5443d20484c54e2d5\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="G:\Android\AndroidStudioProject\UsbSerialExamples\usbSerialExamples\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="G:\Android\AndroidStudioProject\UsbSerialExamples\usbSerialExamples\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_4bdcbf2e11f0e86b9116d8f288b8c779d7c4d1f2\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Administrator\.gradle\caches\modules-2\files-2.1\io.reactivex\rxjava\1.1.6\2586312cd2b8a511e4c6236736f5a039fc0f2273\rxjava-1.1.6.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="2586312cd2b8a511e4c6236736f5a039fc0f2273">
+        <dex dex="G:\Android\AndroidStudioProject\UsbSerialExamples\usbSerialExamples\build\intermediates\transforms\dex\debug\folders\1000\10\rxjava-1.1.6_11e5c01617ee667d4a45ba948a656c898b69cbfd\classes.dex" />
+    </item>
+    <item
         is-multidex="false"
         jar="G:\UsbSerialExamples\usbSerialExamples\build\intermediates\exploded-aar\UsbSerialExamples\usbSerialLibrary\unspecified\jars\classes.jar"
         jumboMode="false"

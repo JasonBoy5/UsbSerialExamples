@@ -114,7 +114,9 @@ public interface UsbSerialDriver {
      * @throws IOException if an error occurred during writing
      */
     public int write(final byte[] src, final int timeoutMillis) throws IOException;
-
+    //////////////////////////////
+//    public int write(final byte src,final int timeoutMillis) throws IOException;
+    //////////////////////////////////
     /**
      * Sets various serial port parameters.
      *
