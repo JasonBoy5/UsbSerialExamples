@@ -136,7 +136,7 @@ public class SerialConsoleActivity extends Activity implements View.OnClickListe
                     });
 
 
-
+//fdsfsdfds
 //            SerialConsoleActivity.this.runOnUiThread(new Runnable() {
 //                @Override
 //                public void run() {
