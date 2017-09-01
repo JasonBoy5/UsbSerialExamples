@@ -24,6 +24,7 @@ int id progressBarTitle 0x7f060001
 int id separator 0x7f060003
 int layout main 0x7f030000
 int layout serial_console 0x7f030001
+int layout set_up 0x7f030002
 int string app_name 0x7f050000
 int string app_title 0x7f050001
 int string refreshing 0x7f050002

@@ -154,19 +154,19 @@ public class  SerialInputOutputManager implements Runnable {
     }
 
 //////////////
-    public byte[] getData() throws IOException {
-        int len = mDriver.read(mReadBuffer.array(), READ_WAIT_MILLIS);
-        final byte[] data = new byte[len];
-        mReadBuffer.get(data, 0, len);
-        return data;
-    }
-
-    public void clearBuf() throws IOException {
-        int len = mDriver.read(mReadBuffer.array(), READ_WAIT_MILLIS);
-        if (len > 0) {
-            mReadBuffer.clear();
-        }
-    }
+//    public byte[] getData() throws IOException {
+//        int len = mDriver.read(mReadBuffer.array(), READ_WAIT_MILLIS);
+//        final byte[] data = new byte[len];
+//        mReadBuffer.get(data, 0, len);
+//        return data;
+//    }
+//
+//    public void clearBuf() throws IOException {
+//        int len = mDriver.read(mReadBuffer.array(), READ_WAIT_MILLIS);
+//        if (len > 0) {
+//            mReadBuffer.clear();
+//        }
+//    }
     ////////////
 
     private void step() throws IOException {

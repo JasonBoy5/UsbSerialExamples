@@ -108,7 +108,6 @@
         android:text="Button" />
 
 
-
     <Button
         android:id="@+id/btn_send"
         android:layout_width="88dp"
@@ -117,7 +116,7 @@
         android:layout_below="@+id/demoScroller"
         android:layout_marginLeft="0dp"
         android:layout_marginTop="5dp"
-        android:text="连接" />
+        android:text="巡更记录" />
 
     <Button
         android:id="@+id/btn_try"
@@ -126,7 +125,7 @@
         android:layout_alignBottom="@+id/btn_send"
         android:layout_marginLeft="3dp"
         android:layout_toRightOf="@+id/btn_send"
-        android:text="Button" />
+        android:text="测试" />
 
     <Button
         android:id="@+id/btn1"
@@ -135,7 +134,7 @@
         android:layout_alignBottom="@+id/btn_try"
         android:layout_marginLeft="3dp"
         android:layout_toRightOf="@+id/btn_try"
-        android:text="Button" />
+        android:text="设备信息" />
 
     <Button
         android:id="@+id/btn2"
@@ -144,7 +143,7 @@
         android:layout_alignBottom="@+id/btn1"
         android:layout_marginLeft="3dp"
         android:layout_toRightOf="@+id/btn1"
-        android:text="Button" />
+        android:text="撞击数" />
 
     <Button
         android:id="@+id/btn3"

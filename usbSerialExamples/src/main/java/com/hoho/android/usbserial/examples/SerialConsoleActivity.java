@@ -34,10 +34,12 @@ import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -71,12 +73,31 @@ public class SerialConsoleActivity extends Activity implements View.OnClickListe
     private TextView mTitleTextView;
     private TextView mDumpTextView;
     private ScrollView mScrollView;
-    private Button mButtonSend;
-    private Button mButtonTry;
-//    private String message =  "没有接收到数据\n"
+    //    private String message =  "没有接收到数据\n"
     private static final int BUFSIZ = 4096;
     private final ByteBuffer mReadBuffer = ByteBuffer.allocate(BUFSIZ);
-    private StringBuffer Msg;
+    private StringBuffer Msg = new StringBuffer();
+    private static long CurrentTime;
+
+    private int FlagUpdateList = 0;//更新列表标志位
+    private int FlagLink = 0;//连接巡更机标志位
+    private int Flag = 0;//巡更机应答消息类型标志位
+    private int FlagReadRecord = 0;//读取巡更记录条目标志位
+    private int FlagRecordSum = 0;//巡更记录总数
+
+    private byte[] RecordNUM = new byte[2];
+    //巡更机应答消息类型
+    private static final int TestLED = 1;
+    private static final int TestBUZZER = 2;
+    private static final int ShowTIME = 3;
+    private static final int ReadMachineID = 4;
+    private static final int ReadMachineType = 5;
+    private static final int ReadCompanyName = 6;
+    private static final int ReadCompanyLOG = 7;
+    private static final int ReadMachineVersion = 8;
+    private static final int ReadRecordNUM = 9;
+    private static final int ReadRecordNumIfo = 10;
+    private static final int ReadRecordClick = 11;
 
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 
@@ -92,6 +113,8 @@ public class SerialConsoleActivity extends Activity implements View.OnClickListe
 
         @Override
         public void onNewData(final byte[] data) {
+//            List<byte[]> list = new ArrayList<>();
+//            list.add(data);
             Observable.just(data)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -108,10 +131,12 @@ public class SerialConsoleActivity extends Activity implements View.OnClickListe
 
                         @Override
                         public void onNext(byte[] bytes) {
-                            Msg.append(bytesToHexString(bytes));
-                            Msg.append("\n");
+                            dealData(bytes);
                         }
                     });
+
+
+
 //            SerialConsoleActivity.this.runOnUiThread(new Runnable() {
 //                @Override
 //                public void run() {
@@ -122,15 +147,238 @@ public class SerialConsoleActivity extends Activity implements View.OnClickListe
         }
     };
 
-    public void upList(final String data){
-        SerialConsoleActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.w(TAG,data);
-                SerialConsoleActivity.this.updateReceivedData(data);
+    private static String GetGbkChar(byte[] codes){
+        if( (byte)0xAA==codes[0]){
+            int offset = 0xB0 - (int)'0';
+            char enChar = (char)(codes[1]&0xFF - offset);//在Java中，codes[1]有符号位，codes[1]&0xFF将有符号位改为无符号位
+            return new String(new char[]{enChar});
+        }
+        else {
+            try {
+                return new String(codes,"GBK");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                return null;
             }
-        });
+        }
+    }//获得单个GBK编码字符（4个字节转换成一个中文或英文）
+    private static String Byte2Gbk(byte[] codes){
+        if(null == codes || 0 == codes.length || 0 != codes.length % 2){
+            return null;
+        }
+        int retLength = codes.length / 2;
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < retLength; i++){
+            byte b1 = codes[i * 2];
+            byte b2 = codes[i * 2 + 1];
+            if ((byte)0xFF == b1 && (byte) 0XFF == b2){
+                break;
+            }
+            String str = GetGbkChar(new byte[]{b1,b2});
+            sb.append(str);
+        }
+        return sb.toString();
+    }//字节数组转为GBK编码
+    private void TestLED(byte bytes){
+        if(0X00 == bytes){
+            String temp = "LED正常\n";
+            Msg.append(temp);
+        }else {
+            String temp = "LED异常\n";
+            Msg.append(temp);
+        }
+    }//测试LED灯
+    private void TestBuzzer(byte bytes){
+        if(0X00 == bytes){
+            String temp = "蜂鸣器正常\n";
+            Msg.append(temp);
+        }else {
+            String temp = "蜂鸣器异常\n";
+            Msg.append(temp);
+        }
+    }//测试蜂鸣器
+    private void ShowTime(byte[] bytes){
+        if(0X07 == bytes[2]){
+            byte[] tmp = new byte[6];
+            System.arraycopy(bytes,3,tmp,0,6);
+            Calendar c = Calendar.getInstance();//获取一个日历实例
+            c.set((int)tmp[0],(int)tmp[1]-1,(int)tmp[2],(int)tmp[3],(int)tmp[4],(int)tmp[5]);//设定日历的日期
+            Date date =c.getTime();
+            String temp = "时间：" + date + "\n";
+            Msg.append(temp);
+        }
+    }//显示时间
+    private void ReadMachineID(byte[] bytes){
+        byte[] temp = new byte[5];
+        System.arraycopy(bytes,3,temp,0,temp.length);
+        String string = "巡更机机号：" + bytesToHexString(temp) + "\n";
+        Msg.append(string);
+    }//读取巡更机机号
+    private void ReadMachineType(byte[] bytes){
+        byte[] temp = new byte[16];
+        System.arraycopy(bytes,3,temp,0,temp.length);
+        Msg.append("型号：");
+        Msg.append(Byte2Gbk(temp));
+        Msg.append("\n");
+    }//读取巡更机型号
+    private void ReadMachineVersion(byte[] bytes){
+        byte[] temp = new byte[8];
+        System.arraycopy(bytes,3,temp,0,temp.length);
+        Msg.append("版本号：");
+        Msg.append(Byte2Gbk(temp));
+        Msg.append("\n");
+    }//读取巡更机版本号
+    private void ReadCompanyName(byte[] bytes){
+        byte[] temp = new byte[32];
+        System.arraycopy(bytes,3,temp,0,temp.length);
+        Msg.append(Byte2Gbk(temp));
+        Msg.append("\n");
     }
+    private void ReadRecordNUM(byte[] bytes){
+        System.arraycopy(bytes,3,RecordNUM,0,RecordNUM.length);
+        FlagRecordSum = (int)RecordNUM[1]&0XFF + 256 * (int)RecordNUM[0]&0XFF;
+        String str = "巡更记录总数：" + FlagRecordSum + "\n";
+        Msg.append(str);
+    }//读巡更记录数
+    private void ReadRecordNumIfo(byte[] bytes){
+        String str1 = "第" + FlagReadRecord + "条记录：\n";
+        byte[] tmp = new byte[6];
+        System.arraycopy(bytes,3,tmp,0,6);
+        Calendar c = Calendar.getInstance();//获取一个日历实例
+        c.set((int)tmp[0],(int)tmp[1]-1,(int)tmp[2],(int)tmp[3],(int)tmp[4],(int)tmp[5]);//设定日历的日期
+        Date date =c.getTime();
+        String str2 = "时间：" + date + "\n";
+        byte[] num = new byte[5];
+        System.arraycopy(bytes,9,num,0,num.length);
+        String str3 = "卡号：" + bytesToHexString(num) + "\n";
+        Msg.append(str1);
+        Msg.append(str2);
+        Msg.append(str3);
+    }//读每条巡更记录内容
+    private void ReadRecordClick(byte[] bytes){
+        byte[] tmp = new byte[2];
+        System.arraycopy(bytes,3,tmp,0,tmp.length);
+        int i = (int)tmp[1]&0XFF + 256 * (int)tmp[0]&0XFF;
+        String str = "撞击记录数：" + i + "\n";
+        Msg.append(str);
+    }
+
+    private void dealData(byte[] bytes){
+        switch (bytes[0]){
+            case (byte) 0XAA:
+                FlagLink = 1;
+                break;
+
+            case (byte) 0XEB:
+                switch (bytes[1]){
+                    case (byte) 0X81:
+                        Flag = TestLED;
+                        TestLED(bytes[3]);
+                        break;
+
+                    case (byte) 0X82:
+                        Flag = TestBUZZER;
+                        TestBuzzer(bytes[3]);
+                        break;
+
+                    case (byte) 0X32:
+                        Flag = ShowTIME;
+                        FlagUpdateList = 1;
+                        ShowTime(bytes);
+                        break;
+
+                    case (byte) 0X34:
+                        Flag = ReadMachineID;
+                        ReadMachineID(bytes);
+                        break;
+
+                    case (byte) 0X61:
+                        Flag = ReadMachineType;
+                        ReadMachineType(bytes);
+                        break;
+
+                    case (byte) 0X6B:
+                        Flag = ReadMachineVersion;
+                        ReadMachineVersion(bytes);
+                        break;
+
+                    case (byte) 0X92:
+                        Flag = ReadCompanyName;
+                        ReadCompanyName(bytes);
+                        break;
+
+                    case (byte) 0X95:
+                        Flag = ReadCompanyLOG;
+                        ReadCompanyName(bytes);
+                        break;
+
+                    case (byte) 0X36:
+                        Flag = ReadRecordNUM;
+                        ReadRecordNUM(bytes);
+                        break;
+
+                    case (byte) 0X38:
+                        Flag = ReadRecordNumIfo;
+                        FlagReadRecord++;
+                        if(FlagRecordSum == FlagReadRecord){
+                            FlagUpdateList = 1;
+                        }
+                        ReadRecordNumIfo(bytes);
+                        break;
+
+                    case (byte) 0x3D:
+                        Flag = ReadRecordClick;
+                        FlagUpdateList = 1;
+                        ReadRecordClick(bytes);
+
+                    default:
+                        break;
+                }
+//                String temp = bytesToHexString(bytes);
+//                Msg.append(temp);
+//                Msg.append("\n");
+//                Msg.append(temp.length());
+//                Msg.append("\n");
+                break;
+
+            default:
+                break;
+        }
+//        if(0X32 == bytes[1]){
+        if(1 == FlagUpdateList){
+            updateList();
+        }
+    }
+
+    private void updateList(){
+        mDumpTextView.append(Msg);
+        mScrollView.smoothScrollTo(0, mDumpTextView.getBottom());
+        Msg.delete(0,Msg.length());
+        FlagRecordSum = 0;
+        FlagReadRecord = 0;
+        FlagUpdateList = 0;
+        Flag = 0;
+//        FlagLink = 0;
+    }//更新列表
+
+//    public void updateListUi(){
+//        SerialConsoleActivity.this.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                SerialConsoleActivity.this.updateList();
+//            }
+//        });
+//    }
+//
+//    public void upList(final byte[] data){
+//        SerialConsoleActivity.this.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.w(TAG,Arrays.toString(data));
+//                SerialConsoleActivity.this.updateReceivedData(data);
+//            }
+//        });
+//    }
 
 //    /////////////////////////
 //    private Handler mHandler = new Handler() {
@@ -141,6 +389,19 @@ public class SerialConsoleActivity extends Activity implements View.OnClickListe
 //    };
     ////////////////////////
 
+    private void MyTimer(){
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask (){
+            public void run() {
+                try {
+                    Send2Machine((byte)0xAA,null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        timer.schedule (task, 0L, 2000L);
+    }//定时器
     public void Send2Machine(final byte cmd, final byte[] data) throws IOException {
         new Thread(){
             @Override
@@ -222,72 +483,225 @@ public class SerialConsoleActivity extends Activity implements View.OnClickListe
             }
         }.start();
     }
+    private void Connect2Machine (){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    Send2Machine((byte) 0XAA,null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+    private void btn_look(){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    Connect2Machine();
+                    while (true){
+                        if(1 == FlagLink){
+                            break;
+                        }
+                        else{
+                            sleep(1);
+                        }
+                    }
+                    Send2Machine((byte) 0X35,new byte[]{0X08,0X08});
+                    while (true){
+                        if(ReadRecordNUM == Flag){
+                            break;
+                        }
+                        else {
+                            sleep(1);
+                        }
+                    }
+                    int Sum = (int)RecordNUM[1]&0xFF + 256 * (int) RecordNUM[0]&0xFF;
+                    for (int t = 0; t < Sum; t ++){
+                        int i = t / 256;
+                        int j = t % 256;
+                        Send2Machine((byte) 0X37,new byte[]{(byte) i,(byte) j,0X08});
+                        while (true){
+                            if (t + 1 == FlagReadRecord){
+                                break;
+                            }
+                            else {
+                                sleep(1);
+                            }
+                        }
+
+                    }
+//                    Send2Machine((byte) 0X31,null);
+
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+    private void btn_lookClick(){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    Connect2Machine();
+                    while (true){
+                        if(1 == FlagLink){
+                            break;
+                        }
+                        else{
+                            sleep(1);
+                        }
+                    }
+                    Send2Machine((byte) 0x3C,new byte[]{0x0D,0x0D});
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+    private void btn_tryClick(){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    Connect2Machine();
+                    while (true){
+                        if(1 == FlagLink){
+                            break;
+                        }
+                        else{
+                            sleep(1);
+                        }
+                    }
+                    Send2Machine((byte) 0X21,null);
+                    while (true){
+                        if(Flag == TestLED){
+                            break;
+                        }
+                        else {
+                            sleep(1);
+                        }
+                    }
+                    Send2Machine((byte) 0X20,null);
+                    while (true){
+                        if(Flag == TestBUZZER){
+                            break;
+                        }
+                        else {
+                            sleep(1);
+                        }
+                    }
+                    Send2Machine((byte) 0X31,null);
+
+
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+    private void btn1Click(){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    Connect2Machine();
+                    while (true){
+                        if(1 == FlagLink){
+                            break;
+                        }
+                        else{
+                            sleep(1);
+                        }
+                    }
+                    Send2Machine((byte) 0X33,new byte[]{0X00,0X04});
+                    while (true){
+                        if(ReadMachineID == Flag){
+                            break;
+                        }
+                        else {
+                            sleep(1);
+                        }
+                    }
+                    Send2Machine((byte) 0X51,new byte[]{0X05,0X01});
+                    while (true){
+                        if(ReadMachineType == Flag){
+                            break;
+                        }
+                        else {
+                            sleep(1);
+                        }
+                    }
+                    Send2Machine((byte) 0X5B,new byte[]{0X0A ,0X0B});
+                    while (true){
+                        if(ReadMachineVersion == Flag){
+                            break;
+                        }
+                        else {
+                            sleep(1);
+                        }
+                    }
+                    Send2Machine((byte) 0X12,new byte[]{0X01,0X02});
+                    while (true){
+                        if(ReadCompanyName == Flag){
+                            break;
+                        }
+                        else {
+                            sleep(1);
+                        }
+                    }
+                    Send2Machine((byte) 0X15,new byte[]{0X01,0X05});
+                    while (true){
+                        if(ReadCompanyLOG == Flag){
+                            break;
+                        }
+                        else {
+                            sleep(1);
+                        }
+                    }
+                    Send2Machine((byte) 0X31,null);
+                }
+                catch (InterruptedException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+
 
     public void onClick(View view){
         switch (view.getId()){
             case R.id.btn_send:
-                try {
-//                    sDriver.write(new byte[]{(byte) 0xAA},0);
-                    Send2Machine((byte) 0XAA,null);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                btn_look();
+//                updateList123();
                 break;
+
             case R.id.btn_try:
-                String str = "1";
-                new Thread(){
-                    @Override
-                    public void run() {
-                        super.run();
-                        try {
-//                            int i;
-//                            for(i = 0; i < 3; i++){
-////                                mSerialIoManager.clearBuf();
-//                                Send2Machine((byte) 0XAA,null);
-//                                byte[] by = mSerialIoManager.getData();
-//                                if(null != by){
-//                                    upList(by);
-//                                    mSerialIoManager.clearBuf();
-//                                    break;
-//                                }
-//                            }
-//                            for(i = 0; i < 3; i++){
-//                                Send2Machine((byte) 0X21,null);
-//                                byte[] by = mSerialIoManager.getData();
-//                                if(null != by){
-//                                    upList(by);
-//                                    mSerialIoManager.clearBuf();
-//                                    break;
-//                                }
-//                            }
-//                            for(i = 0; i < 3; i++){
-//                                Send2Machine((byte) 0X31,null);
-//                                byte[] by = mSerialIoManager.getData();
-//                                if(null != by){
-//                                    upList(by);
-//                                    mSerialIoManager.clearBuf();
-//                                    break;
-//                                }
-//                            }
-
-                            Send2Machine((byte) 0X21,null);
-                            if(Msg.length() > 5){
-                                Send2Machine((byte) 0X31,null);
-                            }
-                            upList(Msg);
-
-//                            sleep(1);
-//                            Send2Machine((byte) 0X33,new byte[]{0X00,0X04});
-//                    Send2Machine((byte) 0X35,new byte[]{0X08,0X08});
-//                    Send2Machine((byte) 0X70,new byte[]{0X08,0X06,0X00,0X00,0X00,0X00,0X00,0X00});
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }.start();
-
+                btn_tryClick();
+//                updateList123();
                 break;
+
+            case R.id.btn1:
+                btn1Click();
+                break;
+
+            case R.id.btn2:
+                btn_lookClick();
+                break;
+            case R.id.btn3:
+                break;
+
+            default:
+                break;
+
         }
 
     }
@@ -299,11 +713,16 @@ public class SerialConsoleActivity extends Activity implements View.OnClickListe
         mTitleTextView = (TextView) findViewById(R.id.demoTitle);
         mDumpTextView = (TextView) findViewById(R.id.consoleText);
         mScrollView = (ScrollView) findViewById(R.id.demoScroller);
-        mButtonSend = (Button)findViewById(R.id.btn_send);
-        mButtonTry = (Button)findViewById(R.id.btn_try);
+        Button mButtonSend = (Button) findViewById(R.id.btn_send);
+        Button mButtonTry = (Button) findViewById(R.id.btn_try);
+        Button mBtnMachineIfo = (Button) findViewById(R.id.btn1);
+        Button mBtnRecordIfo = (Button) findViewById(R.id.btn2);
 
         mButtonSend.setOnClickListener(this);
         mButtonTry.setOnClickListener(this);
+        mBtnMachineIfo.setOnClickListener(this);
+        mBtnRecordIfo.setOnClickListener(this);
+
 //////////////////////////////////////////
 
         /////////////////////////////////
@@ -372,6 +791,16 @@ public class SerialConsoleActivity extends Activity implements View.OnClickListe
         startIoManager();
     }
 ///////////////////////////////////
+public static int byte2int(byte[] bRefArr) {
+    int iOutcome = 0;
+    byte bLoop;
+
+    for (int i = bRefArr.length - 1; i >= 0; i--) {
+        bLoop = bRefArr[i];
+        iOutcome += (bLoop & 0xFF) >> (8 * i);
+    }
+    return iOutcome;
+}
     private static String bytesToHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {
@@ -451,10 +880,10 @@ public class SerialConsoleActivity extends Activity implements View.OnClickListe
         mScrollView.smoothScrollTo(0, mDumpTextView.getBottom());
     }
 
-    private void updatelist(){
-//        mDumpTextView.append(message);
-        mScrollView.smoothScrollTo(0, mDumpTextView.getBottom());
-    }
+//    private void updatelist(){
+////        mDumpTextView.append(message);
+//        mScrollView.smoothScrollTo(0, mDumpTextView.getBottom());
+//    }
 
     /**
      * Starts the activity, using the supplied driver instance.

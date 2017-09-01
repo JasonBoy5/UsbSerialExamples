@@ -4,6 +4,10 @@
         "source": "G:\\Android\\AndroidStudioProject\\UsbSerialExamples\\usbSerialExamples\\src\\main\\res\\layout\\main.xml"
     },
     {
+        "merged": "G:\\Android\\AndroidStudioProject\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\merged\\debug\\layout\\set_up.xml",
+        "source": "G:\\Android\\AndroidStudioProject\\UsbSerialExamples\\usbSerialExamples\\src\\main\\res\\layout\\set_up.xml"
+    },
+    {
         "merged": "G:\\Android\\AndroidStudioProject\\UsbSerialExamples\\usbSerialExamples\\build\\intermediates\\res\\merged\\debug\\layout\\serial_console.xml",
         "source": "G:\\Android\\AndroidStudioProject\\UsbSerialExamples\\usbSerialExamples\\src\\main\\res\\layout\\serial_console.xml"
     }
